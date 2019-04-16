@@ -31,22 +31,39 @@ namespace SzyfrDeszyfr
         private void BtnSzyfr_Click(object sender, EventArgs e)
         {
             SetNameAndPath(txtPath.Text,"zaszyfrowane");
-            if(Encryption(txtPath.Text))
+
+            string hex;
+            if(LoadAndHex(txtPath.Text, out hex))
             {
+                string cypher = TrueEncryption(hex, "??");
+                if(!SaveAndUnhex(cypher))
+                {
+                    MessageBox.Show("Błąd przy zapisie pliku", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 MessageBox.Show("Zaszyfrowano plik", "Zaszyfrowano", MessageBoxButtons.OK);
-            } else
-            {
-                MessageBox.Show("Błąd przy szyfrowaniu pliku", "Błąd", MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
-            
+            else
+            {
+                MessageBox.Show("Błąd przy szyfrowaniu pliku", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void BtnDeszyfr_Click(object sender, EventArgs e)
         {
             SetNameAndPath(txtPath.Text,"odszyfrowane");
-            
-            if (Decryption(txtPath.Text))
+
+            string hex;
+            if (LoadAndHex(txtPath.Text, out hex))
             {
+                string text = TrueDecryption(hex, "??");
+                if (!SaveAndUnhex(text))
+                {
+                    MessageBox.Show("Błąd przy zapisie pliku", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 MessageBox.Show("Odszyfrowano plik", "Odszyfrowano", MessageBoxButtons.OK);
             }
             else
@@ -59,7 +76,8 @@ namespace SzyfrDeszyfr
         {
             string[] pathOrginal = text.Split('\\');
 
-            for(int i = 0; i < pathOrginal.Length - 1; i++)
+            path = "";
+            for (int i = 0; i < pathOrginal.Length - 1; i++)
             {
                 path += pathOrginal[i] + "\\";
             }
@@ -111,13 +129,27 @@ namespace SzyfrDeszyfr
             return lastKey;
         }
 
-        public bool Encryption(string file) 
+        string TrueEncryption(string hex, string key)
+        {
+            string cyther = "";
+
+            return hex;
+        }
+
+        string TrueDecryption(string hex, string key)
+        {
+            string text = "";
+
+            return hex;
+        }
+
+        public bool LoadAndHex(string file, out string outText) 
         {
             CultureInfo culture = new CultureInfo("pl-PL");
             try
             {
                 string[] lines = File.ReadAllLines(file, Encoding.UTF8);
-                string outText = "";
+                outText = "";
                 foreach (string line in lines)
                 {
                     foreach (char sign in line)
@@ -146,33 +178,35 @@ namespace SzyfrDeszyfr
                     }
                     outText += "0000";
                 }
-
-                using (StreamWriter outputFile = new StreamWriter(path + fileName, false, Encoding.UTF8))
-                {
-                    outputFile.WriteLine(outText);
-                    outputFile.Close();
-                }
+                //using (StreamWriter outputFile = new StreamWriter(path + fileName, false, Encoding.UTF8))
+                //{
+                //    outputFile.WriteLine(cypher);
+                //    outputFile.Close();
+                //}
 
                 return true;
             }
             catch (FileNotFoundException exnotfound)
             {
                 MessageBox.Show("Nie znaleziono ścieżki", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                outText = "";
                 return false;
             }
         }
 
-        public bool Decryption(string file)
+        public bool SaveAndUnhex(string hextext)
         {
             CultureInfo culture = new CultureInfo("pl-PL");
             try
             {
-                string[] lines = File.ReadAllLines(file, Encoding.UTF8);
-                string outText = "";
-                foreach (string line in lines)
-                {
-                    outText += line;
-                }
+                //string[] lines = File.ReadAllLines(file, Encoding.UTF8);
+                //outText = "";
+                //foreach (string line in lines)
+                //{
+                //    outText += line;
+                //}
+
+                string outText = hextext;
 
                 if (outText.Length % 4 != 0)
                 {
