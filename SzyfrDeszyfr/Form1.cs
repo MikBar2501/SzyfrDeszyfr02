@@ -23,6 +23,10 @@ namespace SzyfrDeszyfr
         public string path;
         public string fileName;
 
+        public bool AES;
+        public const int miniLength = 4;
+        public const int AESLength = 32;
+
         public SzyfrowanieDeszyfrowanie()
         {
             InitializeComponent();
@@ -30,45 +34,58 @@ namespace SzyfrDeszyfr
 
         private void BtnSzyfr_Click(object sender, EventArgs e)
         {
-            SetNameAndPath(txtPath.Text,"zaszyfrowane");
-
-            string hex;
-            if(LoadAndHex(txtPath.Text, out hex))
+            if((AES && txtKey.Text.Length == AESLength) || (!AES && txtKey.Text.Length == miniLength))
             {
-                string cypher = TrueEncryption(hex, "??");
-                if(!SaveAndUnhex(cypher))
-                {
-                    MessageBox.Show("Błąd przy zapisie pliku", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                SetNameAndPath(txtPath.Text, "zaszyfrowane");
 
-                MessageBox.Show("Zaszyfrowano plik", "Zaszyfrowano", MessageBoxButtons.OK);
+                string hex;
+                if (LoadAndHex(txtPath.Text, out hex))
+                {
+                    string cypher = TrueEncryption(hex, "??");
+                    if (!SaveAndUnhex(cypher))
+                    {
+                        MessageBox.Show("Błąd przy zapisie pliku", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    MessageBox.Show("Zaszyfrowano plik", "Zaszyfrowano", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    MessageBox.Show("Błąd przy szyfrowaniu pliku", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             else
             {
-                MessageBox.Show("Błąd przy szyfrowaniu pliku", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Nieprawidłowa ilość znaków w kluczu", "Błąd", MessageBoxButtons.OK);
             }
         }
 
         private void BtnDeszyfr_Click(object sender, EventArgs e)
         {
-            SetNameAndPath(txtPath.Text,"odszyfrowane");
-
-            string hex;
-            if (LoadAndHex(txtPath.Text, out hex))
+            if ((AES && txtKey.Text.Length == AESLength) || (!AES && txtKey.Text.Length == miniLength))
             {
-                string text = TrueDecryption(hex, "??");
-                if (!SaveAndUnhex(text))
+                SetNameAndPath(txtPath.Text, "odszyfrowane");
+
+                string hex;
+                if (LoadAndHex(txtPath.Text, out hex))
                 {
-                    MessageBox.Show("Błąd przy zapisie pliku", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                    string text = TrueDecryption(hex, "??");
+                    if (!SaveAndUnhex(text))
+                    {
+                        MessageBox.Show("Błąd przy zapisie pliku", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
 
-                MessageBox.Show("Odszyfrowano plik", "Odszyfrowano", MessageBoxButtons.OK);
-            }
-            else
+                    MessageBox.Show("Odszyfrowano plik", "Odszyfrowano", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    MessageBox.Show("Błąd przy deszyfrowaniu pliku", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            } else
             {
-                MessageBox.Show("Błąd przy deszyfrowaniu pliku", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Nieprawidłowa ilość znaków w kluczu", "Błąd", MessageBoxButtons.OK);
             }
         }
 
@@ -94,15 +111,6 @@ namespace SzyfrDeszyfr
         {
             string key = "";
             CultureInfo culture = new CultureInfo("pl-PL");
-            if (preKey.Length < 11)
-            {
-                int countTo11 = 11 - preKey.Length;
-                for (int i = 0; i < countTo11; i++)
-                {
-                    preKey += "0";
-                }
-
-            }
 
             for (int i = 0; i < preKey.Length; i++)
             {
@@ -117,16 +125,9 @@ namespace SzyfrDeszyfr
                 {
                     outHex += hex;
                 }
-                key += outHex;
+                key += outHex[2];
             }
-
-            string lastKey = "";
-            for (int i = 0; i < key.Length - 1; i++)
-            {
-                lastKey += key[i];
-            }
-
-            return lastKey;
+            return key;
         }
 
         string TrueEncryption(string hex, string key)
@@ -245,6 +246,24 @@ namespace SzyfrDeszyfr
                 MessageBox.Show("Nie znaleziono ścieżki", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
+        }
+
+        private void RbAES_CheckedChanged(object sender, EventArgs e)
+        {
+            AES = true;
+            txtKey.Text = "";
+            txtKey.MaxLength = 32;
+            btnDeszyfr.Enabled = true;
+            btnSzyfr.Enabled = true;
+        }
+
+        private void RbMINIAES_CheckedChanged(object sender, EventArgs e)
+        {
+            AES = false;
+            txtKey.Text = "";
+            txtKey.MaxLength = 4;
+            btnDeszyfr.Enabled = true;
+            btnSzyfr.Enabled = true;
         }
     }
 }

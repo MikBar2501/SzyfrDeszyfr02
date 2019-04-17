@@ -34,11 +34,14 @@
             this.txtPath = new System.Windows.Forms.TextBox();
             this.txtKey = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.rbAES = new System.Windows.Forms.RadioButton();
+            this.rbMINIAES = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // btnSzyfr
             // 
-            this.btnSzyfr.Location = new System.Drawing.Point(12, 104);
+            this.btnSzyfr.Enabled = false;
+            this.btnSzyfr.Location = new System.Drawing.Point(12, 130);
             this.btnSzyfr.Name = "btnSzyfr";
             this.btnSzyfr.Size = new System.Drawing.Size(121, 23);
             this.btnSzyfr.TabIndex = 0;
@@ -48,7 +51,8 @@
             // 
             // btnDeszyfr
             // 
-            this.btnDeszyfr.Location = new System.Drawing.Point(139, 104);
+            this.btnDeszyfr.Enabled = false;
+            this.btnDeszyfr.Location = new System.Drawing.Point(139, 130);
             this.btnDeszyfr.Name = "btnDeszyfr";
             this.btnDeszyfr.Size = new System.Drawing.Size(123, 23);
             this.btnDeszyfr.TabIndex = 1;
@@ -74,8 +78,8 @@
             // 
             // txtKey
             // 
-            this.txtKey.Location = new System.Drawing.Point(12, 78);
-            this.txtKey.MaxLength = 11;
+            this.txtKey.Location = new System.Drawing.Point(12, 104);
+            this.txtKey.MaxLength = 4;
             this.txtKey.Name = "txtKey";
             this.txtKey.Size = new System.Drawing.Size(250, 20);
             this.txtKey.TabIndex = 4;
@@ -83,17 +87,43 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 62);
+            this.label2.Location = new System.Drawing.Point(9, 88);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(36, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "Klucz:";
             // 
+            // rbAES
+            // 
+            this.rbAES.AutoSize = true;
+            this.rbAES.Location = new System.Drawing.Point(51, 56);
+            this.rbAES.Name = "rbAES";
+            this.rbAES.Size = new System.Drawing.Size(46, 17);
+            this.rbAES.TabIndex = 6;
+            this.rbAES.TabStop = true;
+            this.rbAES.Text = "AES";
+            this.rbAES.UseVisualStyleBackColor = true;
+            this.rbAES.CheckedChanged += new System.EventHandler(this.RbAES_CheckedChanged);
+            // 
+            // rbMINIAES
+            // 
+            this.rbMINIAES.AutoSize = true;
+            this.rbMINIAES.Location = new System.Drawing.Point(159, 56);
+            this.rbMINIAES.Name = "rbMINIAES";
+            this.rbMINIAES.Size = new System.Drawing.Size(64, 17);
+            this.rbMINIAES.TabIndex = 7;
+            this.rbMINIAES.TabStop = true;
+            this.rbMINIAES.Text = "miniAES";
+            this.rbMINIAES.UseVisualStyleBackColor = true;
+            this.rbMINIAES.CheckedChanged += new System.EventHandler(this.RbMINIAES_CheckedChanged);
+            // 
             // SzyfrowanieDeszyfrowanie
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(274, 139);
+            this.ClientSize = new System.Drawing.Size(274, 165);
+            this.Controls.Add(this.rbMINIAES);
+            this.Controls.Add(this.rbAES);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtKey);
             this.Controls.Add(this.txtPath);
@@ -115,6 +145,8 @@
         private System.Windows.Forms.TextBox txtPath;
         private System.Windows.Forms.TextBox txtKey;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.RadioButton rbAES;
+        private System.Windows.Forms.RadioButton rbMINIAES;
     }
 }
 
