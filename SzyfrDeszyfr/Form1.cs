@@ -33,6 +33,11 @@ namespace SzyfrDeszyfr
             InitializeComponent();
         }
 
+        string GetKey()
+        {
+            return CreateKey(txtKey.Text);
+        }
+
         private void BtnSzyfr_Click(object sender, EventArgs e)
         {
             if((AES && txtKey.Text.Length == AESLength) || (!AES && txtKey.Text.Length == miniLength))
@@ -41,7 +46,9 @@ namespace SzyfrDeszyfr
                 
                 if (LoadAndHex(txtPath.Text, out hex))
                 {
-                    string cypher = TrueEncryption(hex, "??");
+                    Console.WriteLine(hex);
+
+                    string cypher = TrueEncryption(hex, GetKey());
                     SetNameAndPath(txtPath.Text, "zahexowane");
                     using (StreamWriter outputFile = new StreamWriter(path + fileName, false, Encoding.UTF8))
                     {
@@ -78,7 +85,7 @@ namespace SzyfrDeszyfr
                     hexToEncryption += line;
                 }
 
-                string text = TrueDecryption(hexToEncryption, "??");
+                string text = TrueDecryption(hexToEncryption, GetKey());
 
                 //if (SaveAndUnhex(txtPath.Text))
                 if (SaveAndUnhex(text))
@@ -145,17 +152,22 @@ namespace SzyfrDeszyfr
 
         string TrueEncryption(string hex, string key)
         {
-            string cyther = "";
+            Cypher cypher = new Cypher();
+            if (AES)
+                return cypher.AESEncryption(hex, key);
 
-            return hex;
+            return cypher.MiniAESEncryption(hex, key);
         }
 
         string TrueDecryption(string hex, string key)
         {
-            string text = "";
+            Cypher cypher = new Cypher();
+            if (AES)
+                return cypher.AESDecryption(hex, key);
 
-            return hex;
+            return cypher.MiniAESDecryption(hex, key);
         }
+
 
         public bool LoadAndHex(string file, out string outText) 
         {
