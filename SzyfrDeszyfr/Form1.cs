@@ -42,6 +42,12 @@ namespace SzyfrDeszyfr
                 if (LoadAndHex(txtPath.Text, out hex))
                 {
                     string cypher = TrueEncryption(hex, "??");
+                    SetNameAndPath(txtPath.Text, "zahexowane");
+                    using (StreamWriter outputFile = new StreamWriter(path + fileName, false, Encoding.UTF8))
+                    {
+                        outputFile.WriteLine(cypher);
+                        outputFile.Close();
+                    }
                     /*if (!SaveAndUnhex(cypher))
                     {
                         MessageBox.Show("Błąd przy zapisie pliku", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -65,8 +71,14 @@ namespace SzyfrDeszyfr
         {
             if ((AES && txtKey.Text.Length == AESLength) || (!AES && txtKey.Text.Length == miniLength))
             {
+                string[] lines = File.ReadAllLines(txtPath.Text, Encoding.UTF8);
+                string hexToEncryption = "";
+                foreach (string line in lines)
+                {
+                    hexToEncryption += line;
+                }
 
-                string text = TrueDecryption(hex, "??");
+                string text = TrueDecryption(hexToEncryption, "??");
 
                 //if (SaveAndUnhex(txtPath.Text))
                 if (SaveAndUnhex(text))
@@ -156,7 +168,7 @@ namespace SzyfrDeszyfr
                 {
                     foreach (char sign in line)
                     {
-                        string outHex = "00";
+                        string outHex = "";
                         int b = Convert.ToInt32(sign, culture);
                         string hex = b.ToString("x");
                         if (hex.Length > 4)
@@ -172,20 +184,20 @@ namespace SzyfrDeszyfr
                             outHex = "0";
                             outHex += hex;
                         }
-                        else
+                        else if(hex.Length == 2)
                         {
+                            outHex = "00";
+                            outHex += hex;
+                        } else
+                        {
+                            outHex = "000";
                             outHex += hex;
                         }
                         outText += outHex;
                     }
                     outText += "0000";
                 }
-                SetNameAndPath(txtPath.Text, "zahexowane");
-                using (StreamWriter outputFile = new StreamWriter(path + fileName, false, Encoding.UTF8))
-                {
-                    outputFile.WriteLine(outText);
-                    outputFile.Close();
-                }
+                
 
                 return true;
             }
@@ -218,7 +230,7 @@ namespace SzyfrDeszyfr
                 }
                 else
                 {
-                    SetNameAndPath(txtPath.Text, "odhexowane");
+                    SetNameAndPath(txtPath.Text, "odszyfrowane");
                     using (StreamWriter outputFile = new StreamWriter(path + fileName, false, Encoding.UTF8))
                     {
                         for (int i = 0; i < outText.Length; i += 4)
