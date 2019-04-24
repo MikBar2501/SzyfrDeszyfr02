@@ -26,6 +26,7 @@ namespace SzyfrDeszyfr
         public bool AES;
         public const int miniLength = 4;
         public const int AESLength = 32;
+        string hex;
 
         public SzyfrowanieDeszyfrowanie()
         {
@@ -36,17 +37,16 @@ namespace SzyfrDeszyfr
         {
             if((AES && txtKey.Text.Length == AESLength) || (!AES && txtKey.Text.Length == miniLength))
             {
-                SetNameAndPath(txtPath.Text, "zaszyfrowane");
-
-                string hex;
+                //SetNameAndPath(txtPath.Text, "zaszyfrowane");
+                
                 if (LoadAndHex(txtPath.Text, out hex))
                 {
                     string cypher = TrueEncryption(hex, "??");
-                    if (!SaveAndUnhex(cypher))
+                    /*if (!SaveAndUnhex(cypher))
                     {
                         MessageBox.Show("Błąd przy zapisie pliku", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
-                    }
+                    }*/
 
                     MessageBox.Show("Zaszyfrowano plik", "Zaszyfrowano", MessageBoxButtons.OK);
                 }
@@ -65,17 +65,18 @@ namespace SzyfrDeszyfr
         {
             if ((AES && txtKey.Text.Length == AESLength) || (!AES && txtKey.Text.Length == miniLength))
             {
-                SetNameAndPath(txtPath.Text, "odszyfrowane");
 
-                string hex;
-                if (LoadAndHex(txtPath.Text, out hex))
+                string text = TrueDecryption(hex, "??");
+
+                //if (SaveAndUnhex(txtPath.Text))
+                if (SaveAndUnhex(text))
                 {
-                    string text = TrueDecryption(hex, "??");
-                    if (!SaveAndUnhex(text))
+                    
+                    /*if (!SaveAndUnhex(text))
                     {
                         MessageBox.Show("Błąd przy zapisie pliku", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
-                    }
+                    }*/
 
                     MessageBox.Show("Odszyfrowano plik", "Odszyfrowano", MessageBoxButtons.OK);
                 }
@@ -179,11 +180,12 @@ namespace SzyfrDeszyfr
                     }
                     outText += "0000";
                 }
-                //using (StreamWriter outputFile = new StreamWriter(path + fileName, false, Encoding.UTF8))
-                //{
-                //    outputFile.WriteLine(cypher);
-                //    outputFile.Close();
-                //}
+                SetNameAndPath(txtPath.Text, "zahexowane");
+                using (StreamWriter outputFile = new StreamWriter(path + fileName, false, Encoding.UTF8))
+                {
+                    outputFile.WriteLine(outText);
+                    outputFile.Close();
+                }
 
                 return true;
             }
@@ -216,6 +218,7 @@ namespace SzyfrDeszyfr
                 }
                 else
                 {
+                    SetNameAndPath(txtPath.Text, "odhexowane");
                     using (StreamWriter outputFile = new StreamWriter(path + fileName, false, Encoding.UTF8))
                     {
                         for (int i = 0; i < outText.Length; i += 4)
