@@ -47,7 +47,7 @@ namespace SzyfrDeszyfr
 
                 if (LoadAndHex(txtPath.Text, out hex))
                 {
-                    Console.WriteLine(hex);
+                    //Console.WriteLine(hex);
 
                     String cypher = TrueEncryption(hex, GetKey());
                     SetNameAndPath(txtPath.Text, "zaszyfrowane");
@@ -185,7 +185,7 @@ namespace SzyfrDeszyfr
                 //String loadedHex = LoadTest();
                 Char afterCh = CharHex(hex);
 
-                Console.WriteLine(ch + " -> " + hex + " -> " + afterCh);
+                //Console.WriteLine(ch + " -> " + hex + " -> " + afterCh);
             }
         }
 
